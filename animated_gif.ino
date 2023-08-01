@@ -13,10 +13,12 @@ AnimatedGIF gif;
 
 // Examples images
 #include "images/starwars.h"
-#include "images/trench.h"à
+#include "images/trench.h"
+#include "images/hyperspace.h"
 
 // #define GIF_IMAGE starwars
-#define GIF_IMAGE trench
+// #define GIF_IMAGE trench
+#define GIF_IMAGE hyperspace
 
 TFT_eSPI tft = TFT_eSPI();
 
