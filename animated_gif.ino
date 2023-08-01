@@ -17,12 +17,16 @@ AnimatedGIF gif;
 #include "images/hyperspace.h"
 #include "images/nostromo.h"
 #include "images/hud_1.h"
+#include "images/hud_2.h"
 
+// Uncomment the image to display
+//
 // #define GIF_IMAGE starwars
 // #define GIF_IMAGE trench
 // #define GIF_IMAGE hyperspace
 // #define GIF_IMAGE nostromo
-#define GIF_IMAGE hud_1
+// #define GIF_IMAGE hud_1
+#define GIF_IMAGE hud_2
 
 TFT_eSPI tft = TFT_eSPI();
 
