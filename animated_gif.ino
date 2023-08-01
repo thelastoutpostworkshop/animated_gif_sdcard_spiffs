@@ -19,6 +19,7 @@ AnimatedGIF gif;
 #include "images/hud_1.h"
 #include "images/hud_2.h"
 #include "images/hud_3.h"
+#include "images/starwars_hud.h"
 
 // Uncomment the image to display
 //
@@ -28,7 +29,8 @@ AnimatedGIF gif;
 // #define GIF_IMAGE nostromo
 // #define GIF_IMAGE hud_1
 // #define GIF_IMAGE hud_2
-#define GIF_IMAGE hud_3
+// #define GIF_IMAGE hud_3
+#define GIF_IMAGE starwars_hud
 
 TFT_eSPI tft = TFT_eSPI();
 
