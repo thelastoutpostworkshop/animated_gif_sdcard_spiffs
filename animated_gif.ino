@@ -21,6 +21,7 @@ AnimatedGIF gif;
 #include "images/hud_3.h"
 #include "images/hud_4.h"
 #include "images/hud_5.h"
+#include "images/hud_6.h"
 #include "images/starwars_hud.h"
 #include "images/darthvader.h"
 
@@ -34,7 +35,8 @@ AnimatedGIF gif;
 // #define GIF_IMAGE hud_2
 // #define GIF_IMAGE hud_3
 // #define GIF_IMAGE hud_4
-#define GIF_IMAGE hud_5
+// #define GIF_IMAGE hud_5
+#define GIF_IMAGE hud_6
 // #define GIF_IMAGE starwars_hud
 // #define GIF_IMAGE darthvader
 
