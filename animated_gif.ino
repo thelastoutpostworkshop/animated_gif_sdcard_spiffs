@@ -1,11 +1,12 @@
 // Animated GIF with Round Display
 //
-#define USE_DMA       // ESP32 ~1.25x single frame rendering performance boost for badgers.h
-                        // Note: Do not use SPI DMA if reading GIF images from SPI SD card on same bus as TFT
-#define NORMAL_SPEED  // Comment out for rame rate for render speed test
-
 // ESP32 40MHz SPI single frame rendering performance
 // Note: no DMA performance gain on smaller images or transparent pixel GIFs
+//
+#define USE_DMA       // ESP32 ~1.25x single frame rendering performance boost for badgers.h
+                      // Note: Do not use SPI DMA if reading GIF images from SPI SD card on same bus as TFT
+#define NORMAL_SPEED  // Comment out for rame rate for render speed test
+
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include <AnimatedGIF.h>
@@ -32,6 +33,8 @@ AnimatedGIF gif;
 // #define GIF_IMAGE trench
 // #define GIF_IMAGE hyperspace
 // #define GIF_IMAGE nostromo
+// #define GIF_IMAGE starwars_hud
+// #define GIF_IMAGE darthvader
 // #define GIF_IMAGE hud_1
 // #define GIF_IMAGE hud_2
 // #define GIF_IMAGE hud_3
@@ -39,8 +42,6 @@ AnimatedGIF gif;
 // #define GIF_IMAGE hud_5
 // #define GIF_IMAGE hud_6
 #define GIF_IMAGE hud_7
-// #define GIF_IMAGE starwars_hud
-// #define GIF_IMAGE darthvader
 
 TFT_eSPI tft = TFT_eSPI();
 
