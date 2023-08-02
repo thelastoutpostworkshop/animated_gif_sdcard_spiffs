@@ -26,6 +26,7 @@ AnimatedGIF gif;
 #include "images/hud_7.h"
 #include "images/starwars_hud.h"
 #include "images/darthvader.h"
+#include "images/x_wing.h"
 
 // Uncomment the image to display
 //
@@ -41,7 +42,8 @@ AnimatedGIF gif;
 // #define GIF_IMAGE hud_4
 // #define GIF_IMAGE hud_5
 // #define GIF_IMAGE hud_6
-#define GIF_IMAGE hud_7
+// #define GIF_IMAGE hud_7
+#define GIF_IMAGE x_wing
 
 TFT_eSPI tft = TFT_eSPI();
 
