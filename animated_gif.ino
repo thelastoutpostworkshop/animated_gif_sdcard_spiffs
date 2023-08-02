@@ -21,6 +21,7 @@ AnimatedGIF gif;
 #include "images/hud_3.h"
 #include "images/starwars_hud.h"
 #include "images/darthvader.h"
+#include "images/hud_4.h"
 
 // Uncomment the image to display
 //
@@ -32,7 +33,8 @@ AnimatedGIF gif;
 // #define GIF_IMAGE hud_2
 // #define GIF_IMAGE hud_3
 // #define GIF_IMAGE starwars_hud
-#define GIF_IMAGE darthvader
+// #define GIF_IMAGE darthvader
+#define GIF_IMAGE hud_4
 
 TFT_eSPI tft = TFT_eSPI();
 
