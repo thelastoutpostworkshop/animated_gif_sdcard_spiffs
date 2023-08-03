@@ -19,7 +19,6 @@ AnimatedGIF gif;
 #include "images/hud_5.h"
 #include "images/hud_6.h"
 #include "images/hud_7.h"
-#include "images/starwars_hud.h"
 #include "images/darthvader.h"
 #include "images/x_wing.h"
 
@@ -29,7 +28,6 @@ AnimatedGIF gif;
 // #define GIF_IMAGE trench
 // #define GIF_IMAGE hyperspace
 // #define GIF_IMAGE nostromo
-// #define GIF_IMAGE starwars_hud
 // #define GIF_IMAGE darthvader
 // #define GIF_IMAGE hud_4
 // #define GIF_IMAGE hud_5
