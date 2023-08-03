@@ -15,7 +15,6 @@ AnimatedGIF gif;
 // Examples images
 #include "images/hyperspace.h"
 #include "images/nostromo.h"
-#include "images/hud_1.h"
 #include "images/hud_4.h"
 #include "images/hud_5.h"
 #include "images/hud_6.h"
@@ -32,7 +31,6 @@ AnimatedGIF gif;
 // #define GIF_IMAGE nostromo
 // #define GIF_IMAGE starwars_hud
 // #define GIF_IMAGE darthvader
-// #define GIF_IMAGE hud_1
 // #define GIF_IMAGE hud_4
 // #define GIF_IMAGE hud_5
 // #define GIF_IMAGE hud_6
