@@ -3,14 +3,14 @@
 // ESP32 40MHz SPI single frame rendering performance
 // Note: no DMA performance gain on smaller images or transparent pixel GIFs
 //
-#define USE_DMA       // ESP32 ~1.25x single frame rendering performance boost for badgers.h
+// #define USE_DMA       // ESP32 ~1.25x single frame rendering performance boost for badgers.h
                       // Note: Do not use SPI DMA if reading GIF images from SPI SD card on same bus as TFT
 #define NORMAL_SPEED  // Comment out for rame rate for render speed test
 
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include <AnimatedGIF.h>
-AnimatedGIF gif;
+#include <SD.h>
 
 // Examples images
 #include "images/hyperspace.h"
@@ -37,10 +37,22 @@ AnimatedGIF gif;
 // #define GIF_IMAGE hud_7
 // #define GIF_IMAGE x_wing
 
+#define chipSelectSDCard 12
+File gif_file;
+
+AnimatedGIF gif;
 TFT_eSPI tft = TFT_eSPI();
 
 void setup() {
   Serial.begin(115200);
+
+  if (!SD.begin(chipSelectSDCard))
+  {
+    Serial.println("SD Card initialization failed!");
+    while (1)
+      ;
+  }
+  Serial.println("SD initialization done.");
 
   tft.begin();
 #ifdef USE_DMA
