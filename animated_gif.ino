@@ -148,20 +148,29 @@ void fileClose(void *pHandle)
 
 int32_t fileRead(GIFFILE *pFile, uint8_t *pBuf, int32_t iLen)
 {
+  int32_t iBytesRead;
+  iBytesRead = iLen;
+  if ((pFile->iSize - pFile->iPos) < iLen)
+    iBytesRead = pFile->iSize - pFile->iPos;
+  if (iBytesRead <= 0)
+    return 0;
+
+  gifFile.seek(pFile->iPos);
   int32_t bytesRead = gifFile.read(pBuf, iLen);
-  Serial.print("Read ");
-  Serial.print(bytesRead);
-  Serial.println(" bytes");
+  pFile->iPos += iBytesRead;
+
   return bytesRead;
 }
 
 int32_t fileSeek(GIFFILE *pFile, int32_t iPosition)
 {
-  bool success = gifFile.seek(iPosition);
-  Serial.print("Seek to ");
-  Serial.print(iPosition);
-  Serial.println(success ? " succeeded" : " failed");
-  return success ? iPosition : -1;
+  if (iPosition < 0)
+    iPosition = 0;
+  else if (iPosition >= pFile->iSize)
+    iPosition = pFile->iSize - 1;
+  pFile->iPos = iPosition;
+  gifFile.seek(pFile->iPos);
+  return iPosition;
 }
 
 // Callback to draw the GIF
