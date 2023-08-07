@@ -11,7 +11,7 @@ AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
 TFT_eSPI tft = TFT_eSPI(); // TFT object
 
-const char *filename = "/nostromo.gif";
+const char *filename = "/darthvader.gif";
 void setup()
 {
   Serial.begin(115200);
@@ -33,6 +33,11 @@ void setup()
   {
     Serial.println("SPIFFS initialization failed!");
   }
+
+  // Reformmating the SPIFFS to have space if a large GIF is loaded
+  Serial.println("Formatting SPIFFS...");
+  SPIFFS.format(); // This will erase all the files
+  Serial.println("SPIFFS formatted successfully.");
 
   // Open GIF file from SD card
   Serial.println("Openning GIF file from SD card...");
@@ -94,7 +99,7 @@ void *fileOpen(const char *filename, int32_t *pFileSize)
   {
     Serial.println("Failed to open GIF file from SPIFFS!");
   }
-  return &gifFile; 
+  return &gifFile;
 }
 
 void fileClose(void *pHandle)
