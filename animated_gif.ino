@@ -11,12 +11,12 @@ AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
 TFT_eSPI tft = TFT_eSPI(); // TFT object
 
-const char *filename = "/darthvader.gif";
+const char *filename = "/hud_2.gif";
 void setup()
 {
   Serial.begin(115200);
   tft.begin();
-  tft.setRotation(3); // Adjust the rotation as needed
+  tft.setRotation(2); // Adjust the rotation as needed
   tft.fillScreen(TFT_BLACK);
 
   // Initialize SD card
