@@ -1,1 +1,1 @@
-# animated_gif
+# Animated GIF stored in SD Card and played from SPIFFS
