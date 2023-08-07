@@ -11,7 +11,7 @@ AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
 TFT_eSPI tft = TFT_eSPI(); // TFT object
 
-const char *filename = "/hud_5.gif";
+const char *filename = "/x_wing.gif";
 void setup()
 {
   Serial.begin(115200);
