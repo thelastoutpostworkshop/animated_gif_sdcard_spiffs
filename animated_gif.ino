@@ -11,7 +11,7 @@ AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
 TFT_eSPI tft = TFT_eSPI(); // TFT object
 
-const char *filename = "/hud_2.gif";
+const char *filename = "/hud_5.gif";
 void setup()
 {
   Serial.begin(115200);
@@ -49,7 +49,6 @@ void setup()
   }
 
   // Create a file in SPIFFS to store the GIF
-  Serial.println("Copy GIF in SPIFFS...");
   File spiffsFile = SPIFFS.open(filename, FILE_WRITE, true);
   if (!spiffsFile)
   {
@@ -58,6 +57,7 @@ void setup()
   }
 
   // Read the GIF from SD card and write to SPIFFS
+  Serial.println("Copy GIF in SPIFFS...");
   byte buffer[512];
   while (sdFile.available())
   {
@@ -69,6 +69,7 @@ void setup()
   sdFile.close();
 
   // Initialize the GIF
+  Serial.println("Starting animation...");
   gif.begin(BIG_ENDIAN_PIXELS);
 }
 
