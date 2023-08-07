@@ -77,30 +77,9 @@ void setup()
   spiffsFile.close();
   sdFile.close();
 
-  // Open the GIF from SPIFFS
-  // gifFile = SPIFFS.open("/darthvader.gif", FILE_READ);
-  // if (gifFile)
-  // {
-  //   Serial.print("File size in SPIFFS: ");
-  //   Serial.println(gifFile.size());
-  //   gifFile.close();
-  // }
-  // else
-  // {
-  //   Serial.println("Failed to open GIF file from SPIFFS!");
-  // }
 
   // Initialize the GIF
   gif.begin(BIG_ENDIAN_PIXELS);
-
-  // // Play the GIF frame by frame
-  // int delayMilliseconds;
-  // while (gif.playFrame(true, &delayMilliseconds))
-  // {
-  //   delay(delayMilliseconds);
-  // }
-
-  // gifFile.close();
 }
 
 void loop()
@@ -172,15 +151,3 @@ int32_t fileSeek(GIFFILE *pFile, int32_t iPosition)
   gifFile.seek(pFile->iPos);
   return iPosition;
 }
-
-// Callback to draw the GIF
-// void gifDraw(GIFDRAW *pDraw) {
-//   if (pDraw->iDir == 3) {
-//     // Clear the background if it's the last frame
-//     tft.fillRect(pDraw->iX, pDraw->iY, pDraw->iWidth, pDraw->iHeight, TFT_BLACK);
-//   } else if (pDraw->pPixels) {
-//     // Draw the pixels
-//     uint16_t *pixels = (uint16_t *)pDraw->pPixels;
-//     tft.pushImage(pDraw->iX, pDraw->iY, pDraw->iWidth, pDraw->iHeight, pixels);
-//   }
-// }
