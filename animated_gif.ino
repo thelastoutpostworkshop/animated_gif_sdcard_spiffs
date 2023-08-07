@@ -11,7 +11,7 @@ AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
 TFT_eSPI tft = TFT_eSPI(); // TFT object
 
-const char *filename = "/darthvader.gif";
+const char *filename = "/nostromo.gif";
 void setup()
 {
   Serial.begin(115200);
@@ -20,60 +20,45 @@ void setup()
   tft.fillScreen(TFT_BLACK);
 
   // Initialize SD card
+  Serial.println("SD card initialization...");
   if (!SD.begin(SD_CS_PIN))
   {
     Serial.println("SD card initialization failed!");
     return;
   }
 
-  Serial.println("Entering SPIFFS initialization...");
-
   // Initialize SPIFFS
-  if (!SPIFFS.begin())
+  Serial.println("Initialize SPIFFS...");
+  if (!SPIFFS.begin(true))
   {
-    Serial.println("SPIFFS initialization failed! Formatting...");
-    if (SPIFFS.format())
-    {
-      Serial.println("SPIFFS formatted successfully.");
-    }
-    else
-    {
-      Serial.println("SPIFFS formatting failed!");
-      return;
-    }
+    Serial.println("SPIFFS initialization failed!");
   }
-  Serial.println("Exiting SPIFFS");
 
   // Open GIF file from SD card
+  Serial.println("Openning GIF file from SD card...");
   File sdFile = SD.open(filename);
   if (!sdFile)
   {
     Serial.println("Failed to open GIF file from SD card!");
     return;
   }
-  Serial.println("Gif file opened from SD Card!");
 
   // Create a file in SPIFFS to store the GIF
+  Serial.println("Copy GIF in SPIFFS...");
   File spiffsFile = SPIFFS.open(filename, FILE_WRITE, true);
   if (!spiffsFile)
   {
-    Serial.println("Failed to create file in SPIFFS!");
+    Serial.println("Failed to copy GIF in SPIFFS!");
     return;
   }
-  Serial.println("Created file in SPIFFS!");
 
   // Read the GIF from SD card and write to SPIFFS
   byte buffer[512];
-  int totalBytesRead = 0;
   while (sdFile.available())
   {
     int bytesRead = sdFile.read(buffer, sizeof(buffer));
     spiffsFile.write(buffer, bytesRead);
-    totalBytesRead += bytesRead;
   }
-  Serial.println("Read the GIF from SD card and write to SPIFFS!");
-  Serial.print("Total bytes read from SD card: ");
-  Serial.println(totalBytesRead);
 
   spiffsFile.close();
   sdFile.close();
