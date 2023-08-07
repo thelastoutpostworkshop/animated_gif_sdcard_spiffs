@@ -11,6 +11,7 @@ AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
 TFT_eSPI tft = TFT_eSPI(); // TFT object
 
+const char *filename = "/darthvader.gif";
 void setup()
 {
   Serial.begin(115200);
@@ -44,7 +45,7 @@ void setup()
   Serial.println("Exiting SPIFFS");
 
   // Open GIF file from SD card
-  File sdFile = SD.open("/hud_1.gif");
+  File sdFile = SD.open(filename);
   if (!sdFile)
   {
     Serial.println("Failed to open GIF file from SD card!");
@@ -53,7 +54,7 @@ void setup()
   Serial.println("Gif file opened from SD Card!");
 
   // Create a file in SPIFFS to store the GIF
-  File spiffsFile = SPIFFS.open("/hud_1.gif", FILE_WRITE, true);
+  File spiffsFile = SPIFFS.open(filename, FILE_WRITE, true);
   if (!spiffsFile)
   {
     Serial.println("Failed to create file in SPIFFS!");
@@ -77,17 +78,14 @@ void setup()
   spiffsFile.close();
   sdFile.close();
 
-
   // Initialize the GIF
   gif.begin(BIG_ENDIAN_PIXELS);
 }
 
 void loop()
 {
-  if (gif.open("/hud_1.gif", fileOpen, fileClose, fileRead, fileSeek, GIFDraw))
+  if (gif.open(filename, fileOpen, fileClose, fileRead, fileSeek, GIFDraw))
   {
-    Serial.printf("Successfully opened GIF; Canvas size = %d x %d\n", gif.getCanvasWidth(), gif.getCanvasHeight());
-
     tft.startWrite(); // The TFT chip slect is locked low
     while (gif.playFrame(true, NULL))
     {
@@ -107,17 +105,11 @@ void *fileOpen(const char *filename, int32_t *pFileSize)
 {
   gifFile = SPIFFS.open(filename, FILE_READ);
   *pFileSize = gifFile.size();
-  if (gifFile)
-  {
-    Serial.print("File size in SPIFFS: ");
-    Serial.println(*pFileSize);
-  }
-  else
+  if (!gifFile)
   {
     Serial.println("Failed to open GIF file from SPIFFS!");
   }
-
-  return &gifFile; // Return the address of the global File object
+  return &gifFile; 
 }
 
 void fileClose(void *pHandle)
