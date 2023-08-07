@@ -1,122 +1,177 @@
-// Animated GIF with Round Display
-//
-
-#include <SPI.h>
-#include <TFT_eSPI.h>
-#include <AnimatedGIF.h>
 #include <SD.h>
+#include <SPI.h>
+#include <FS.h>
+#include <SPIFFS.h>
+#include <TFT_eSPI.h>
+#include "AnimatedGIF.h"
 
-// Examples images
-#include "images/hyperspace.h"
-#include "images/nostromo.h"
-#include "images/hud_1.h"
-#include "images/hud_2.h"
-#include "images/hud_5.h"
-#include "images/hud_6.h"
-#include "images/hud_7.h"
-#include "images/darthvader.h"
-#include "images/x_wing.h"
-
-// Uncomment the image to display
-//
-// #define image starwars
-// #define image trench
-// #define image hyperspace
-// #define image nostromo
-// #define image darthvader
-// #define image hud_1
-// #define image hud_2
-// #define image hud_5
-// #define image hud_6
-// #define image hud_7
-// #define image x_wing
-
-uint8_t *gif_image;
-int image_size;
-
-#define chipSelectSDCard 12
-File gif_file;
+#define SD_CS_PIN 12 // Change this to your SD card's CS pin
 
 AnimatedGIF gif;
-TFT_eSPI tft = TFT_eSPI();
+File gifFile;              // Global File object for the GIF file
+TFT_eSPI tft = TFT_eSPI(); // TFT object
 
 void setup()
 {
   Serial.begin(115200);
-
-  initSDCard();
   tft.begin();
-  tft.setRotation(2);
+  tft.setRotation(3); // Adjust the rotation as needed
   tft.fillScreen(TFT_BLACK);
 
+  // Initialize SD card
+  if (!SD.begin(SD_CS_PIN))
+  {
+    Serial.println("SD card initialization failed!");
+    return;
+  }
+
+  Serial.println("Entering SPIFFS initialization...");
+
+  // Initialize SPIFFS
+  if (!SPIFFS.begin())
+  {
+    Serial.println("SPIFFS initialization failed! Formatting...");
+    if (SPIFFS.format())
+    {
+      Serial.println("SPIFFS formatted successfully.");
+    }
+    else
+    {
+      Serial.println("SPIFFS formatting failed!");
+      return;
+    }
+  }
+  Serial.println("Exiting SPIFFS");
+
+  // Open GIF file from SD card
+  File sdFile = SD.open("/hud_1.gif");
+  if (!sdFile)
+  {
+    Serial.println("Failed to open GIF file from SD card!");
+    return;
+  }
+  Serial.println("Gif file opened from SD Card!");
+
+  // Create a file in SPIFFS to store the GIF
+  File spiffsFile = SPIFFS.open("/hud_1.gif", FILE_WRITE, true);
+  if (!spiffsFile)
+  {
+    Serial.println("Failed to create file in SPIFFS!");
+    return;
+  }
+  Serial.println("Created file in SPIFFS!");
+
+  // Read the GIF from SD card and write to SPIFFS
+  byte buffer[512];
+  int totalBytesRead = 0;
+  while (sdFile.available())
+  {
+    int bytesRead = sdFile.read(buffer, sizeof(buffer));
+    spiffsFile.write(buffer, bytesRead);
+    totalBytesRead += bytesRead;
+  }
+  Serial.println("Read the GIF from SD card and write to SPIFFS!");
+  Serial.print("Total bytes read from SD card: ");
+  Serial.println(totalBytesRead);
+
+  spiffsFile.close();
+  sdFile.close();
+
+  // Open the GIF from SPIFFS
+  // gifFile = SPIFFS.open("/darthvader.gif", FILE_READ);
+  // if (gifFile)
+  // {
+  //   Serial.print("File size in SPIFFS: ");
+  //   Serial.println(gifFile.size());
+  //   gifFile.close();
+  // }
+  // else
+  // {
+  //   Serial.println("Failed to open GIF file from SPIFFS!");
+  // }
+
+  // Initialize the GIF
   gif.begin(BIG_ENDIAN_PIXELS);
-  gif_image = readImageFile("darthvader.gif");
+
+  // // Play the GIF frame by frame
+  // int delayMilliseconds;
+  // while (gif.playFrame(true, &delayMilliseconds))
+  // {
+  //   delay(delayMilliseconds);
+  // }
+
+  // gifFile.close();
 }
 
 void loop()
 {
-  // Put your main code here, to run repeatedly:
-  if (gif_image && gif.open((uint8_t *)gif_image, image_size, GIFDraw))
+  if (gif.open("/hud_1.gif", fileOpen, fileClose, fileRead, fileSeek, GIFDraw))
   {
     Serial.printf("Successfully opened GIF; Canvas size = %d x %d\n", gif.getCanvasWidth(), gif.getCanvasHeight());
+
     tft.startWrite(); // The TFT chip slect is locked low
     while (gif.playFrame(true, NULL))
     {
-      yield();
+      // yield();
     }
     gif.close();
-    tft.endWrite(); // Release TFT chip select for other SPI devices
-  }
-}
-
-void initSDCard(void)
-{
-  if (!SD.begin(chipSelectSDCard))
-  {
-    Serial.println("SD Card initialization failed!");
-    while (1)
-      ;
-  }
-  Serial.println("SD initialization done.");
-}
-
-uint8_t *readImageFile(String filename)
-{
-  uint8_t *image;
-
-  gif_file = SD.open("/" + filename);
-
-  if (!gif_file)
-  {
-    Serial.println("Failed to open file for reading");
-    return NULL;
-  }
-  // Find out the size of the file to create a suitable buffer
-  image_size = gif_file.size();
-  image = (uint8_t *)malloc(image_size);
-
-  if (image == NULL)
-  {
-    Serial.print("Failed to allocate memory:");
-    Serial.println(image_size);
-    gif_file.close();
-    return NULL;
-  }
-
-  // Read the entire file into the buffer
-  size_t bytesRead = gif_file.read(image, image_size);
-
-  if (bytesRead != image_size)
-  {
-    Serial.println("Failed to read complete file");
-    return NULL;
+    tft.endWrite(); // Release TFT chip select for other SPI devices}
   }
   else
   {
-    Serial.println("Success to read complete file");
+    Serial.printf("Error gif.open!");
+  }
+}
+
+// Callbacks for file operations
+void *fileOpen(const char *filename, int32_t *pFileSize)
+{
+  gifFile = SPIFFS.open(filename, FILE_READ);
+  *pFileSize = gifFile.size();
+  if (gifFile)
+  {
+    Serial.print("File size in SPIFFS: ");
+    Serial.println(*pFileSize);
+  }
+  else
+  {
+    Serial.println("Failed to open GIF file from SPIFFS!");
   }
 
-  // free(image); // Free the allocated memory
-  gif_file.close(); // Close the file
-  return image;
+  return &gifFile; // Return the address of the global File object
 }
+
+void fileClose(void *pHandle)
+{
+  gifFile.close();
+}
+
+int32_t fileRead(GIFFILE *pFile, uint8_t *pBuf, int32_t iLen)
+{
+  int32_t bytesRead = gifFile.read(pBuf, iLen);
+  Serial.print("Read ");
+  Serial.print(bytesRead);
+  Serial.println(" bytes");
+  return bytesRead;
+}
+
+int32_t fileSeek(GIFFILE *pFile, int32_t iPosition)
+{
+  bool success = gifFile.seek(iPosition);
+  Serial.print("Seek to ");
+  Serial.print(iPosition);
+  Serial.println(success ? " succeeded" : " failed");
+  return success ? iPosition : -1;
+}
+
+// Callback to draw the GIF
+// void gifDraw(GIFDRAW *pDraw) {
+//   if (pDraw->iDir == 3) {
+//     // Clear the background if it's the last frame
+//     tft.fillRect(pDraw->iX, pDraw->iY, pDraw->iWidth, pDraw->iHeight, TFT_BLACK);
+//   } else if (pDraw->pPixels) {
+//     // Draw the pixels
+//     uint16_t *pixels = (uint16_t *)pDraw->pPixels;
+//     tft.pushImage(pDraw->iX, pDraw->iY, pDraw->iWidth, pDraw->iHeight, pixels);
+//   }
+// }
