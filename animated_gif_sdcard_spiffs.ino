@@ -2,21 +2,21 @@
 #include <SPI.h>
 #include <FS.h>
 #include <SPIFFS.h>
-#include <TFT_eSPI.h>
-#include "AnimatedGIF.h"
+#include <TFT_eSPI.h>      // Install this library whit the Arduino Library Manager
+#include <AnimatedGIF.h>   // Install this library whit the Arduino Library Manager
 
-#define SD_CS_PIN 12 // Change this to your SD card's CS pin
+#define SD_CS_PIN 12 // Chip Select Pin (CS) for SD card Reader
 
 AnimatedGIF gif;
 File gifFile;              // Global File object for the GIF file
-TFT_eSPI tft = TFT_eSPI(); // TFT object
+TFT_eSPI tft = TFT_eSPI(); 
 
-const char *filename = "/x_wing.gif";
+const char *filename = "/x_wing.gif";   // Change to load other gif files in images/GIF
 void setup()
 {
   Serial.begin(115200);
   tft.begin();
-  tft.setRotation(2); // Adjust the rotation as needed
+  tft.setRotation(2); // Adjust Rotation of your screen (0-3)
   tft.fillScreen(TFT_BLACK);
 
   // Initialize SD card
@@ -35,8 +35,11 @@ void setup()
   }
 
   // Reformmating the SPIFFS to have space if a large GIF is loaded
+  // You could run out of SPIFFS storage space if you load more than one image or a large GIF
+  // You can also increase the SPIFFS storage space by changing the partition of the ESP32
+  //
   Serial.println("Formatting SPIFFS...");
-  SPIFFS.format(); // This will erase all the files
+  SPIFFS.format(); // This will erase all the files, change as needed, SPIFFs is non-volatile memory
   Serial.println("SPIFFS formatted successfully.");
 
   // Open GIF file from SD card
@@ -80,18 +83,13 @@ void loop()
     tft.startWrite(); // The TFT chip slect is locked low
     while (gif.playFrame(true, NULL))
     {
-      // yield();
     }
     gif.close();
-    tft.endWrite(); // Release TFT chip select for other SPI devices}
-  }
-  else
-  {
-    Serial.printf("Error gif.open!");
+    tft.endWrite(); // Release TFT chip select for the SD Card Reader
   }
 }
 
-// Callbacks for file operations
+// Callbacks for file operations for the Animated GIF Lobrary
 void *fileOpen(const char *filename, int32_t *pFileSize)
 {
   gifFile = SPIFFS.open(filename, FILE_READ);
