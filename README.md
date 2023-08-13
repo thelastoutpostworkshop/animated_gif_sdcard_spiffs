@@ -1,4 +1,4 @@
-# Animated GIF stored in SD Card and played from SPIFFS
+# Animated GIF stored in SD Card and played from SPIFFS on a Round Display (GC9A01) with the ESP32
 
 ### Youtube Tutorial
 https://youtu.be/mqSe_uMpxIs
