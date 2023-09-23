@@ -2,8 +2,8 @@
 #include <SPI.h>
 #include <FS.h>
 #include <SPIFFS.h>
-#include <TFT_eSPI.h>      // Install this library whit the Arduino Library Manager
-#include <AnimatedGIF.h>   // Install this library whit the Arduino Library Manager
+#include <TFT_eSPI.h>      // Install this library with the Arduino Library Manager
+#include <AnimatedGIF.h>   // Install this library with the Arduino Library Manager
 
 #define SD_CS_PIN 12 // Chip Select Pin (CS) for SD card Reader
 
