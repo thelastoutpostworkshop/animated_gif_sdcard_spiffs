@@ -23,7 +23,7 @@ void setup()
 
   // Initialize SD card
   Serial.println("SD card initialization...");
-  if (!SD.begin(SD_CS_PIN))
+  if (!SD.begin(SD_CS_PIN,tft.getSPIinstance()))
   {
     Serial.println("SD card initialization failed!");
     return;
